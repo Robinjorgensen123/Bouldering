@@ -31,3 +31,25 @@ export const register = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const login = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body
+
+        const user = await User.findOne({ email })
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "Fel e-post eller lösenord"
+            })
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(password, user.passwordHash)
+        if (!isPasswordCorrect) {
+            return res.status(401).json({
+                sucess: false,
+                message: "Fel e-post eller lösenord"
+            })
+        }
+    }
+}
