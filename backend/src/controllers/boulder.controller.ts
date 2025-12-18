@@ -46,3 +46,27 @@ export const getAllBoulders = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ success: false, message: "Kunde inte hämta leder" });
   }
 };
+
+export const getBoulderById = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const boulder = await Boulder.findById(id);
+
+    if (!boulder) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Bouldern hittades inte" });
+    }
+    const user = await User.findById(req.user?.id);
+    const userPref = user?.preferredGradeSystem || "font";
+
+    const b = boulder.toObject() as IBoulder;
+    b.displayGrade = getDisplayGrade(b.grade.value, b.grade.system, userPref);
+
+    res.json({ success: true, data: b });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Serverfel vid hämtning av boulder" });
+  }
+};
