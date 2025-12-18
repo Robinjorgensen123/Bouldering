@@ -7,6 +7,7 @@ export interface IBoulder extends Document {
     value: string;
     system: "font" | "v-scale";
   };
+  displayGrade?: string;
   location: {
     type: "Point";
     coordinates: [number, number];
