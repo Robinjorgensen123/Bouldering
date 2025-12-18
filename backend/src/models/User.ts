@@ -3,6 +3,7 @@ import { Schema, model, Document } from "mongoose";
 export interface IUser extends Document {
   email: string;
   passwordHash: string;
+  preferredGradeSystem: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -11,7 +12,7 @@ const userSchema = new Schema<IUser>(
   {
     email: {
       type: String,
-      requred: true,
+      required: true,
       unique: true,
       lowercase: true,
       trim: true,
@@ -19,6 +20,11 @@ const userSchema = new Schema<IUser>(
     passwordHash: {
       type: String,
       required: true,
+    },
+    preferredGradeSystem: {
+      type: String,
+      enum: ["font", "v-scale"],
+      default: "font",
     },
   },
   {
